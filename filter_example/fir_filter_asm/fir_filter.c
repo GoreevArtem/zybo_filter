@@ -22,13 +22,13 @@ int main() {
     // Выделение памяти под массивы
     int32_t* samples = (int32_t*)malloc(N * sizeof(int32_t));
     if (!samples) {
-        printf("Ошибка выделения памяти\n");
+        printf("Memory allocation error\n");
         return 1;
     }
 
     int32_t* filtered = (int32_t*)calloc(N, sizeof(int32_t));
     if (!filtered) {
-        printf("Ошибка выделения памяти\n");
+        printf("Memory allocation error\n");
         free(samples);
         return 1;
     }
@@ -62,16 +62,8 @@ int main() {
     double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
 
     // Вывод результатов
-    printf("Число отсчетов: %d\n", N);
-    printf("Время программного выполнения FIR: %.6f секунд\n", time_spent);
-
-    // Опционально: сохранить результаты в файл или проверить
-    // Например, вывод первых 10 значений
-    printf("\nПервые 10 отфильтрованных отсчетов:\n");
-    for (int i = 0; i < 10 && i < N; i++) {
-        printf("%d ", filtered[i]);
-    }
-    printf("\n");
+    printf("Number of samples: %d\n", N);
+    printf("FIR program execution time: %.6f seconds\n", time_spent);
 
     // Очистка памяти
     free(samples);
