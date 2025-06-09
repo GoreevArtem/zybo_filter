@@ -1,6 +1,6 @@
 # Проект FIR-фильтрации на платформе Zybo (Zynq-7000)
 
-Этот проект реализует аппаратно-ускоренную FIR-фильтрацию сигналов на плате **Zybo Z7-10** (Xilinx Zynq-7000). Проект сочетает программную обработку на ARM Cortex-A9 с аппаратным ускорением FIR-фильтра в программируемой логике (PL) на основе проектов, список которых представлен ниже. Также есть пример своей реализации работы с фильтром без Pynq на основе обращения к регистрам DMA, которые были взяты из официальной документации Xilinx
+Этот проект реализует аппаратно-ускоренную FIR-фильтрацию сигналов на плате **Zybo** (Xilinx Zynq-7000). Проект сочетает программную обработку на ARM Cortex-A9 с аппаратным ускорением FIR-фильтра в программируемой логике (PL) на основе проектов, список которых представлен ниже. Также есть пример своей реализации работы с фильтром без Pynq на основе обращения к регистрам DMA, которые были взяты из официальной документации Xilinx
 
 Особенности проекта:
 - Аппаратный IP-block FIR-фильтра в ПЛИС
@@ -23,9 +23,9 @@
    - USB-UART адаптер для отладки
 
 2. **Программные**:
-   - Vivado 2022.1+
-   - Vitis 2022.1+
-   - PetaLinux 2022.1+
+   - Vivado 2022.1
+   - Vitis 2022.1
+   - PetaLinux 2022.1
    - Python 3.8+ (для PYNQ)
 
 ## Инструкция по сборке
@@ -44,10 +44,6 @@ vivado -source scripts/generate_project.tcl
 На основе [Zybo-base-linux](https://github.com/Digilent/Zybo-base-linux/tree/master):
 ```bash
 git clone https://github.com/Digilent/Zybo-base-linux.git
-cd Zybo-base-linux
-# Копируем конфигурацию проекта
-cp path/to/our/project/configs/zybo_fir_defconfig .config
-make
 ```
 
 ### 3. Сборка PYNQ образа
@@ -56,23 +52,16 @@ make
 ```bash
 git clone https://github.com/nick-petrovsky/PYNQ-ZYBO.git
 cd PYNQ-ZYBO
-# Копируем наш аппаратный битфайл
-cp path/to/our/project/fpga/zybo_filter.bit base/
+# Копируем аппаратный битфайл
+cp path/to/our/project/fpga/fir_filter_test.bit base/
 make
 ```
 
 ### 4. Сборка boot.bin
 
-Используя Xilinx Vitis:
+Используя Petalinux:
 ```bash
-cd sdk/
-vitis -workspace .
-# Создаем FSBL проект
-# Добавляем аппаратную платформу
-# Генерируем boot.bin с компонентами:
-#   - FSBL
-#   - Bitstream
-#   - U-Boot
+petalinux-package --boot --format BIN --fsbl images/linux/zynq_fsbl.elf --u-boot images/linux/u-boot.elf --fpga fir_filter_test.bit --force
 ```
 
 ### 5. Подготовка SD-карты
